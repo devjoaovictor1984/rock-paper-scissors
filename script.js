@@ -1,12 +1,18 @@
-// Rock, Paper, Scissors - Jogo melhor de 5
+// Variáveis para pontuação
+let playScoreHuman = 0;
+let playScoreComputer = 0;
+const winnerScore = 5; // Primeiro a alcançar 5 pontos vence
 
-let playScoreHuman = 0;  // Pontuação do humano
-let playScoreComputer = 0; // Pontuação do computador
-const matches = 5; // Número de rodadas
+// Seleciona os elementos do DOM
+const humanScoreSpan = document.querySelector('.human span');
+const computerScoreSpan = document.querySelector('.machine span');
+const resultDiv = document.querySelector('.winner');
+const countdownDiv = document.querySelector('.jogo-started');
+const buttons = document.querySelectorAll('.ppt-div button');
 
 // Função para escolha aleatória do computador
 function getComputerChoice() {
-    let randomNum = Math.random(); // Gera um número entre 0 e 1
+    let randomNum = Math.random();
     if (randomNum < 0.33) {
         return 'ROCK';
     } else if (randomNum < 0.66) {
@@ -14,19 +20,6 @@ function getComputerChoice() {
     } else {
         return 'SCISSORS';
     }
-}
-
-// Função para obter a escolha do humano
-function getHumanChoice() {
-    let choice = prompt("ROCK, PAPER OR SCISSORS").trim().toUpperCase();
-
-    // Validação: se a entrada não for válida, pede novamente
-    while (choice !== 'ROCK' && choice !== 'PAPER' && choice !== 'SCISSORS') {
-        console.log("Entrada inválida! Digite ROCK, PAPER ou SCISSORS.");
-        choice = prompt("ROCK, PAPER OR SCISSORS").trim().toUpperCase();
-    }
-    
-    return choice; // Retorna a escolha válida do usuário
 }
 
 // Função para determinar o vencedor da rodada
@@ -47,35 +40,75 @@ function determineWinner(human, computer) {
     }
 }
 
-// Loop do jogo - Melhor de 5 rodadas
-for (let i = 1; i <= matches; i++) {
-    console.log(`Rodada ${i} de ${matches}`);
+// Função para atualizar a interface de resultados e exibir pontuação no console
+function updateScoreboard() {
+    humanScoreSpan.textContent = playScoreHuman;
+    computerScoreSpan.textContent = playScoreComputer;
 
-    let humanChoice = getHumanChoice();
+    console.log(`Placar Atual: Humano ${playScoreHuman} x ${playScoreComputer} Computador`);
+
+    // Verifica se alguém atingiu 5 pontos primeiro
+    if (playScoreHuman === winnerScore) {
+        resultDiv.textContent = "🎉 Você venceu o jogo!";
+        console.log("🎉 Você venceu o jogo!");
+        startCountdown();
+    } else if (playScoreComputer === winnerScore) {
+        resultDiv.textContent = "💻 O computador venceu o jogo!";
+        console.log("💻 O computador venceu o jogo!");
+        startCountdown();
+    }
+}
+
+// Função para iniciar a contagem regressiva antes de resetar o jogo
+function startCountdown() {
+    let countdown = 5;
+    countdownDiv.textContent = `Reiniciando em ${countdown}...`;
+    
+    let interval = setInterval(() => {
+        countdown--;
+        countdownDiv.textContent = `Reiniciando em ${countdown}...`;
+
+        if (countdown === 0) {
+            clearInterval(interval);
+            resetGame();
+        }
+    }, 1000);
+}
+
+// Função que reseta o jogo
+function resetGame() {
+    playScoreHuman = 0;
+    playScoreComputer = 0;
+    resultDiv.textContent = "Faça sua escolha!";
+    countdownDiv.textContent = ""; // Limpa a contagem regressiva
+    console.log("O jogo foi reiniciado.");
+    updateScoreboard();
+}
+
+// Função que gerencia cada rodada ao clicar em um botão
+function playRound(event) {
+    let humanChoice = event.target.id.toUpperCase();
     let computerChoice = getComputerChoice();
 
-    console.log(`Sua escolha: ${humanChoice}`);
-    console.log(`Escolha do computador: ${computerChoice}`);
+    console.log(`Você escolheu: ${humanChoice}`);
+    console.log(`O computador escolheu: ${computerChoice}`);
 
-    let winner = determineWinner(humanChoice, computerChoice);
+    let roundWinner = determineWinner(humanChoice, computerChoice);
 
-    // Atualiza a pontuação
-    if (winner === 'human') {
+    if (roundWinner === 'human') {
         playScoreHuman++;
-    } else if (winner === 'computer') {
+        resultDiv.textContent = `🎉 Você venceu! ${humanChoice} vence ${computerChoice}`;
+    } else if (roundWinner === 'computer') {
         playScoreComputer++;
+        resultDiv.textContent = `💻 O computador venceu! ${computerChoice} vence ${humanChoice}`;
+    } else {
+        resultDiv.textContent = `🤝 Empate! Ambos escolheram ${humanChoice}`;
     }
 
-    console.log(`Placar: Você ${playScoreHuman} x ${playScoreComputer} Computador`);
-    console.log('-------------------------------');
+    updateScoreboard();
 }
 
-// Resultado final após as 5 rodadas
-console.log("=== RESULTADO FINAL ===");
-if (playScoreHuman > playScoreComputer) {
-    console.log(`Parabéns! Você venceu com ${playScoreHuman} a ${playScoreComputer}!`);
-} else if (playScoreHuman < playScoreComputer) {
-    console.log(`O computador venceu com ${playScoreComputer} a ${playScoreHuman}. Tente novamente!`);
-} else {
-    console.log(`O jogo terminou empatado com ${playScoreHuman} a ${playScoreComputer}!`);
-}
+// Adiciona event listeners aos botões
+buttons.forEach(button => {
+    button.addEventListener('click', playRound);
+});

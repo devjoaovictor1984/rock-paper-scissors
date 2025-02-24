@@ -3,10 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="script.js"></script>
+    
     <title>Rock, Paper and Scissors</title>
+
+    <style>
+        body {
+            background: #272727;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        .game {
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+            width: 500px;
+            justify-content: center;
+            margin: 0 auto;
+            text-align: center;
+            /* background: red; */
+            color: aliceblue;
+        }
+
+        .game img {
+            width: 150px;
+            margin: 0 auto;
+        }
+
+        button{
+            width: 100px;
+           
+            color: blueviolet;
+            background: #f3c0ef;
+            font-size: 1em;
+            text-transform: uppercase;
+            padding: 10px;
+            border: 0;
+        }
+
+        button:hover {
+            cursor: pointer;
+            background: #eee1ed;
+            color: #272727;
+            font-weight: bold;
+        }
+
+        .result{
+            margin-top: 10px;
+        }
+
+    </style>
+
 </head>
 <body>
+    <!-- pedra, papel e tesoura.
+     Estrutura do Game -->
+
+     <div class="game">
+        <h1>Jogo: Pedra, Papel e Tesoura.</h1>
+        <p>Quem fizer 5 pontos vence! Faça sua escolha.</p>
+        <img src="images/pedra-papel-tesoura.png" alt="rock, paper and scissors">
+        <div class="ppt">
+            <h2>Escolha a sua opção!</h2>
+            <div class="ppt-div">
+                <button id="rock">Pedra</button>
+                <button id="paper">Papel</button>
+                <button id="scissors">Tesoura</button>
+            </div>
+            <div class="result">
+                <div class="human">Humano Pontuação: <span>0</span> </div>
+                <div class="machine">Máquina Pontuação: <span>0</span> </div>
+                <div class="winner">Vencedor</div>
+                <div class="jogo-started"></div>
+            </div>
+        </div>
+     </div>
     
+     <script src="script.js"></script>
+
 </body>
 </html>
